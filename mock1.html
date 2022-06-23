@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+
+	<script src="jquery-3.5.1.min.js"></script>
+
+
+
+	<script>//our scrip will come here 
+
+
+
+
+
+		$(() => {
+
+
+			//function to display booklist
+			function showbook() {
+				let ajaxparams = {
+
+					data: {},
+					url: "http://localhost:8081/getbook",
+					type: 'get',
+					dataType: "json",
+					success: (datagivenbyserver) => {
+						console.log("data given by server on success " + datagivenbyserver);
+
+						book = datagivenbyserver;//server data added to book table
+						let content = "";
+						for (let i = 0; i < book.length; i++) {
+							content += "<br>" + book[i].bookid + " " + book[i].bookname + " " + book[i].price;
+						}
+						$("#show").html(content);
+					},
+					error: (errorgivenbyserver) => {
+						console.log("error " + errorgivenbyserver)
+
+					}
+				};
+				console.log("funtion working");
+				$.ajax(ajaxparams);
+
+			}
+			showbook();//calling function
+
+
+
+			//begin of add event
+
+			$("#add").click(
+				() => {
+
+					console.log("add button clicked");
+
+					let input = {
+						x: $("#bookid").val(),
+						y: $("#name").val(),
+						z: $("#price").val(),
+					};
+
+
+					let ajaxparams = {
+
+						data: input,
+						url: "http://localhost:8081/add",
+						type: 'get',
+						dataType: "json",
+						success: (output) => {
+							console.log("data given by server on success " + output)
+
+		
+							if (output) {
+								$("#msg").text("book added successfully");
+
+							}
+							else {
+
+								$("#msg").text("book not added");
+							}
+							$("#name").val("");
+							$("#price").val("");
+
+
+							showbook();
+						},
+						error: (errorgivenbyserver) => {
+							console.log("error " + errorgivenbyserver)
+
+						}
+					};
+					console.log("funtion working");
+					$.ajax(ajaxparams);
+
+
+
+
+				}
+			);//end of click event
+
+
+
+
+
+
+
+
+
+
+
+		});
+
+
+	</script>
+</head>
+
+<body>
+
+	<input type="text" id="bookid" placeholder="Book id">
+	<span id="msg">message</span>
+	<br><br>
+	<input type="text" id="name" placeholder="Book Name">
+	<br><br>
+	<input type="text" id="price" placeholder="Price">
+	<br><br>
+	<button id="add">add a book</button>
+	<hr>
+	<p id="show">show all books here</p>
+
+</body>
+
+</html>
